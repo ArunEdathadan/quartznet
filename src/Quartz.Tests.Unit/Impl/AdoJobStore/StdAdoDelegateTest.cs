@@ -41,6 +41,7 @@ namespace Quartz.Tests.Unit.Impl.AdoJobStore
 {
     /// <author>Marko Lahma (.NET)</author>
     [TestFixture]
+    [Category("database")]
     public class StdAdoDelegateTest
     {
         [Test]

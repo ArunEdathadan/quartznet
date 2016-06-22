@@ -51,6 +51,7 @@ namespace Quartz.Tests.Unit.Xml
     /// </summary>
     /// <author>Marko Lahma (.NET)</author>
     [TestFixture]
+    [Category("database")]
     public class XMLSchedulingDataProcessorTest
     {
         private XMLSchedulingDataProcessor processor;
