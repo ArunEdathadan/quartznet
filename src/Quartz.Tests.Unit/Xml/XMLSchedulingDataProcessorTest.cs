@@ -51,7 +51,6 @@ namespace Quartz.Tests.Unit.Xml
     /// </summary>
     /// <author>Marko Lahma (.NET)</author>
     [TestFixture]
-    [Category("database")]
     public class XMLSchedulingDataProcessorTest
     {
         private XMLSchedulingDataProcessor processor;
@@ -68,6 +67,8 @@ namespace Quartz.Tests.Unit.Xml
             processor = new XMLSchedulingDataProcessor(new SimpleTypeLoadHelper());
 #if FAKE_IT_EASY
             mockScheduler = A.Fake<IScheduler>();
+            A.CallTo(() => mockScheduler.GetJobDetail(A<JobKey>._)).Returns(Task.FromResult<IJobDetail>(null));
+            A.CallTo(() => mockScheduler.GetTrigger(A<TriggerKey>._)).Returns(Task.FromResult<ITrigger>(null));
 #endif
 #if TRANSACTIONS
             scope = new TransactionScope();
@@ -84,6 +85,7 @@ namespace Quartz.Tests.Unit.Xml
 
 #if FAKE_IT_EASY
         [Test]
+        [Category("database")]
         public async Task TestScheduling_MinimalConfiguration()
         {
             Stream s = ReadJobXmlFromEmbeddedResource("MinimalConfiguration_20.xml");
@@ -95,6 +97,7 @@ namespace Quartz.Tests.Unit.Xml
 
 
         [Test]
+        [Category("database")]
         public async Task TestScheduling_RichConfiguration()
         {
             Stream s = ReadJobXmlFromEmbeddedResource("RichConfiguration_20.xml");
@@ -108,6 +111,7 @@ namespace Quartz.Tests.Unit.Xml
         }
 
         [Test]
+        [Category("database")]
         public async Task TestScheduling_QuartzNet250()
         {
             Stream s = ReadJobXmlFromEmbeddedResource("QRTZNET250.xml");
@@ -299,6 +303,7 @@ namespace Quartz.Tests.Unit.Xml
 #endif
 
         [Test]
+        [Category("database")]
         public async Task TestSimpleTriggerNoRepeat()
         {
             IScheduler scheduler = await CreateDbBackedScheduler();
@@ -328,6 +333,7 @@ namespace Quartz.Tests.Unit.Xml
         }
 
         [Test]
+        [Category("database")]
         public async Task TestRemoveJobTypeNotFound()
         {
             var scheduler = await CreateDbBackedScheduler();
@@ -393,6 +399,7 @@ namespace Quartz.Tests.Unit.Xml
         }
 
         [Test]
+        [Category("database")]
         public async Task TestOverwriteJobTypeNotFound()
         {
             IScheduler scheduler = await CreateDbBackedScheduler();

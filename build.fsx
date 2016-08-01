@@ -35,11 +35,24 @@ Target "UpdateVersions" (fun _ ->
 )
 
 Target "Build" (fun _ ->
+    DotNetCli.Restore (fun p -> 
+                { p with 
+                    TimeOut = TimeSpan.FromMinutes 10. }) |> ignore
+
     !! "src/*/project.json" -- "src/*Web*/project.json"
         |> DotNetCli.Build
             (fun p -> 
                 { p with 
                     Configuration = configuration })
+)
+
+Target "Pack" (fun _ -> 
+    !! "src/*/project.json" -- "src/*Web*/project.json"
+        |> DotNetCli.Pack
+            (fun p -> 
+                { p with 
+                    Configuration = "Release"
+                })
 )
 
 Target "CopyArtifacts" (fun _ ->    
@@ -53,21 +66,14 @@ Target "Test" (fun _ ->
             (fun p -> 
                     { p with 
                         Configuration = configuration
-                        AdditionalArgs = ["--where \"cat != \"database\""] })
+                        AdditionalArgs = ["--where \"cat != database && cat != fragile\""] })
 )
 
 "Clean"
   //==> "UpdateVersions"
+  ==> "Build"
+  ==> "Test"
+  ==> "Pack"
   ==> "CopyArtifacts"
-  ==> "Test"
-  ==> "Build"
 
-"Clean"
-  //==> "UpdateVersions"
-  ==> "Build"
-
-"Clean"
-  //==> "UpdateVersions"
-  ==> "Test"
-
-RunTargetOrDefault "Build"
+RunTargetOrDefault "Test"

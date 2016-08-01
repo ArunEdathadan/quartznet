@@ -4,11 +4,14 @@ pull_requests:
 branches:
   only:
   - master
-services: mssql2014
+services:
+- mssql2016
+- mysql
+- postgresql
 nuget:
   disable_publish_on_pr: true
 build_script:
-- cmd: .\psake.bat ci
+- cmd: build.cmd
 test: off
 artifacts:
 - path: src\Quartz\bin\release\*.nupkg
