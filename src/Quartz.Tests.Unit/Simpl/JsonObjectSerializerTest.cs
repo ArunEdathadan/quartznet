@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Specialized;
 using System.Diagnostics;
 using System.IO;
 using System.Text;
@@ -67,12 +68,25 @@ namespace Quartz.Tests.Unit.Simpl
             CompareSerialization<ICalendar>(calendar);
         }
 
+        [Test]
+        public void SerializeNameValueCollection()
+        {
+            var collection = new NameValueCollection
+            {
+                {"key", "value"},
+                {"key2", null}
+            };
+
+            CompareSerialization(collection);
+        }
+
         private void CompareSerialization<T>(T original) where T : class
         {
             var bytes = serializer.Serialize(original);
-            var deserialized = serializer.DeSerialize<T>(bytes);
 
             WriteJson(bytes);
+
+            var deserialized = serializer.DeSerialize<T>(bytes);
 
             Assert.That(deserialized, Is.EqualTo(original));
         }

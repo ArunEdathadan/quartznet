@@ -25,6 +25,7 @@ namespace Quartz.Simpl
                 NullValueHandling = NullValueHandling.Ignore,
                 ConstructorHandling = ConstructorHandling.AllowNonPublicDefaultConstructor
             };
+            serializer.Converters.Add(new NameValueCollectionConverter());
         }
 
         /// <summary>
